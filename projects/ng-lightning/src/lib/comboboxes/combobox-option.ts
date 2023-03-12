@@ -34,7 +34,7 @@ export class NglComboboxOption implements Highlightable, OnDestroy {
     this.cd.detectChanges();
 
     if (active) {
-      this.service.combobox.inputEl.setAriaActiveDescendant(this.uid);
+      this.service.activeDescendant.next(this.uid);
       this.scrollIntoView();
     } else {
       clearTimeout(this.scrollTimer);
@@ -66,7 +66,7 @@ export class NglComboboxOption implements Highlightable, OnDestroy {
   onSelectViaInteraction(evt: MouseEvent) {
     trapEvent(evt);
     if (!this.disabled) {
-      this.service.combobox.onOptionSelection(this);
+      this.service.onOptionSelection(this);
     }
   }
 
@@ -74,7 +74,7 @@ export class NglComboboxOption implements Highlightable, OnDestroy {
   hover() {
     if (!this.disabled) {
       this.disableNextScrollIntoView = true;
-      this.service.combobox.keyManager.setActiveItem(this);
+      this.service.keyManager.setActiveItem(this);
     }
   }
 

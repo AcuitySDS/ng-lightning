@@ -1,8 +1,11 @@
 import { InjectionToken } from '@angular/core';
 import { FormStyle, getLocaleDayNames, getLocaleMonthNames, TranslationWidth, getLocaleFirstDayOfWeek } from '@angular/common';
+import type {NglDatepickerInput} from "./input/datepicker-input";
 
 /** Injection token that can be used to specify default options. */
 export const NGL_DATEPICKER_CONFIG = new InjectionToken<NglDatepickerConfig>('ngl-datepicker-config');
+
+export const NGL_DATEPICKER_INPUT = new InjectionToken<NglDatepickerInput>('ngl-datepicker-input');
 
 export class NglDatepickerConfig<D = any> {
 

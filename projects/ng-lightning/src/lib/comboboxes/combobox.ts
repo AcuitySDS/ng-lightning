@@ -13,11 +13,7 @@ import { NglComboboxInput } from './combobox-input';
 import { NglComboboxService } from './combobox.service';
 import { NglComboboxConfig, NGL_COMBOBOX_CONFIG } from './config';
 
-export interface NglComboboxOptionItem {
-  value: number | string;
-  label?: string;
-  disabled?: boolean;
-}
+
 
 @Component({
   selector: 'ngl-combobox',
@@ -29,22 +25,22 @@ export interface NglComboboxOptionItem {
   providers: [ NglComboboxService ],
 })
 export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
+  private activeDescendantSubscription: any;
 
-  @Input() variant: 'base' | 'lookup' = 'base';
+  @Input() set variant(value) {this.service.variant = value};
 
   @Input() label?: string | TemplateRef<any>;
 
-  readonly uid = uniqueId('combobox');
 
-  @Input() @InputBoolean() open = false;
+  @Input() @InputBoolean() set open(value) {this.service.open = value;}
 
-  @Output() openChange = new EventEmitter<boolean>();
+  @Output() openChange;
 
-  @Input() selection: any;
+  @Input() set selection(value) {this.service.selection = value};
 
-  @Output() selectionChange = new EventEmitter();
+  @Output() selectionChange;
 
-  @Input() @InputBoolean() multiple = false;
+  @Input() @InputBoolean() set multiple(value) { this.service.multiple = value; }
 
   @Input() @InputNumber() visibleLength: 5 | 7 | 10 = 5;
 
@@ -54,7 +50,7 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
 
   @Input() @InputBoolean() loadingMore?: boolean;
 
-  @Input() @InputBoolean() closeOnSelection = true;
+  @Input() @InputBoolean() set closeOnSelection(value) {this.service.closeOnSelection = value;}
 
   /**
    * Text added to loading spinner.
@@ -76,19 +72,10 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
   @HostBinding('class.slds-has-error') hasErrors = false;
 
   @Input('options') set data(data: any[]) {
-    this._data = (data || []).map((d) => {
-      if (typeof d === 'string') {
-        // Support array of strings as options, by mapping to NglComboboxOptionItem
-        return { value: d, label: d };
-      } else if (!d.label) {
-        // Use `value` if missing `label`
-        return { ...d, label: d.value };
-      }
-      return d;
-    });
+    this.service.data = data;
   }
   get data() {
-    return this._data as any[];
+    return this.service.data;
   }
 
   @ViewChild('overlayOrigin', { static: true }) overlayOrigin?: CdkOverlayOrigin;
@@ -101,14 +88,11 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
 
   overlayPositions: ConnectionPositionPair[] = [...DEFAULT_DROPDOWN_POSITIONS['left']];
 
-  /** Manages active item in option list based on key events. */
-  keyManager?: ActiveDescendantKeyManager<NglComboboxOption> | null;
+
 
   private optionChangesSubscription?: Subscription | null;
 
   private ɵRequiredSubscription?: Subscription;
-
-  private _data?: NglComboboxOptionItem[] | null;
 
   private keyboardSubscription?: Subscription | null;
 
@@ -116,7 +100,7 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
 
   @Input() selectionValueFn = (selection: string[]): string => {
     if (selection.length > 0) {
-      if (this.multiple && this.isLookup) {
+      if (this.multiple && this.service.isLookup) {
         return '';
       }
       return selection.length === 1 ? selection[0] : `${selection.length} options selected`;
@@ -124,21 +108,13 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
     return '';
   }
 
-  get activeOption(): NglComboboxOption | null {
-    return this.keyManager ? this.keyManager.activeItem : null;
-  }
 
-  get selectedOptions(): NglComboboxOptionItem[] {
-    return this.data ? this.data.filter(d => this.isSelected(d.value)) : [];
-  }
 
-  get isLookup(): boolean {
-    return this.variant === 'lookup';
-  }
 
-  get hasLookupSingleSelection() {
-    return this.isLookup && !this.multiple && this.selectedOptions.length > 0;
-  }
+
+
+
+
 
   constructor(@Optional() @Inject(NGL_COMBOBOX_CONFIG) defaultConfig: NglComboboxConfig,
               private ngZone: NgZone,
@@ -149,7 +125,9 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
     this.noOptionsFound = config.noOptionsFound;
     this.removeSelectedLabel = config.removeSelectedLabel;
 
-    this.service.combobox = this;
+    //service.combobox = this;
+    this.openChange = this.service.openChange;
+    this.selectionChange = this.service.selectionChange;
     // this.service.openChange = this.openChange;
   }
 
@@ -161,6 +139,9 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
       this.required = required;
       this.cd.detectChanges();
     });
+    this.activeDescendantSubscription = this.service.activeDescendant.subscribe(
+      (uid: string) => this.inputEl.setAriaActiveDescendant(uid)
+    );
     this.calculateErrors();
   }
 
@@ -176,14 +157,14 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
     this.overlayWidth = this.overlayOrigin?.elementRef.nativeElement.offsetWidth;
     this.cd.detectChanges();
 
-    this.keyManager = this.options && new ActiveDescendantKeyManager(this.options).withWrap();
+    this.service.keyManager = this.options && new ActiveDescendantKeyManager(this.options).withWrap();
 
     // Activate selected item or first option
     const selectedOption = this.options?.find(o => o.selected);
     if (selectedOption) {
-      this.keyManager?.setActiveItem(selectedOption);
+      this.service.keyManager?.setActiveItem(selectedOption);
     } else {
-        this.keyManager?.setFirstItemActive();
+        this.service.keyManager?.setFirstItemActive();
     }
 
     // Listen to button presses if picklist to activate matching option
@@ -194,14 +175,14 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
 
       const options = this.options?.toArray() || [];
 
-      if (!this.activeOption || options.indexOf(this.activeOption) === -1) {
-        if (this.isLookup && options.length === 0) {
-          this.keyManager?.setActiveItem(null);
+      if (!this.service.activeOption || options.indexOf(this.service.activeOption) === -1) {
+        if (this.service.isLookup && options.length === 0) {
+          this.service.keyManager?.setActiveItem(null);
         } else {
-          this.keyManager?.setFirstItemActive();
+          this.service.keyManager?.setFirstItemActive();
         }
       } else {
-        this.activeOption.scrollIntoView();
+        this.service.activeOption.scrollIntoView();
       }
 
       this.updateMenuHeight();
@@ -211,7 +192,7 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
   }
 
   onDetach() {
-    if (this.open) {
+    if (this.service.open) {
       this.close();
       return;
     }
@@ -233,22 +214,14 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
   }
 
   inputIconRight() {
-    return this.isLookup ? 'utility:search' : 'utility:down';
+    return this.service.isLookup ? 'utility:search' : 'utility:down';
   }
 
   hasNoMatches() {
-    return this.isLookup && this.data.length === 0 && !this.loadingMore;
+    return this.service.isLookup && this.data.length === 0 && !this.loadingMore;
   }
 
-  onOptionSelection(option: NglComboboxOption | null = this.activeOption) {
-    if (option) {
-      const selection = addOptionToSelection(option.value, this.selection, this.multiple);
-      this.selectionChange.emit(selection);
-      if (this.closeOnSelection) {
-        this.close();
-      }
-    }
-  }
+
 
   // Trigger by clear button on Lookup
   onClearSelection() {
@@ -256,27 +229,37 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
     setTimeout(() => this.inputEl?.focus(), 0);
   }
 
-  /**
-   * Check whether value is currently selected.
-   *
-   * @param value The value in test, whether is (part of) selection or not
-   */
-  isSelected(value: any): boolean {
-    return isOptionSelected(value, this.selection, this.multiple);
-  }
+
 
   ngOnDestroy() {
     this.detach();
     this.ɵRequiredSubscription?.unsubscribe();
+    this.activeDescendantSubscription?.unsubscribe();
   }
 
   close() {
     this.openChange.emit(false);
   }
 
+  get hasLookupSingleSelection() {
+    return this.service.hasLookupSingleSelection;
+  }
+
+  get open() {
+    return this.service.open;
+  }
+
+  isSelected(value: any): boolean {
+    return this.service.isSelected(value);
+  }
+
+  get uid() {
+    return this.service.uid;
+  }
+
   private detach() {
     this.keyboardSubscribe(false);
-    this.keyManager = null;
+    this.service.keyManager = null;
     if (this.optionChangesSubscription) {
       this.optionChangesSubscription.unsubscribe();
       this.optionChangesSubscription = null;
@@ -284,7 +267,7 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
   }
 
   private calculateDisplayValue() {
-    const value = this.selectionValueFn(this.selectedOptions.map(option => option.label || ''));
+    const value = this.selectionValueFn(this.service.selectedOptions.map(option => option.label || ''));
     this.inputEl?.setValue(value);
   }
 
@@ -296,18 +279,18 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
 
     if (listen && this.inputEl) {
       this.keyboardSubscription = this.inputEl.keyboardBuffer$.subscribe((pattern) => {
-        if (this.options && this.keyManager) {
+        if (this.options && this.service.keyManager) {
 
           pattern = pattern.toLocaleLowerCase();
 
           const options = this.options.toArray();
 
-          const activeIndex = this.activeOption ? (this.keyManager.activeItemIndex || 0) + 1 : 0;
+          const activeIndex = this.service.activeOption ? (this.service.keyManager.activeItemIndex || 0) + 1 : 0;
           for (let i = 0, n = options.length; i < n; i++) {
             const index = (activeIndex + i) % n;
             const option = options[index];
             if (!option.disabled && option.label.toLocaleLowerCase().substr(0, pattern.length) === pattern) {
-              this.keyManager.setActiveItem(option);
+              this.service.keyManager.setActiveItem(option);
               break;
             }
           }

@@ -18,17 +18,17 @@ export class NglComboboxInput {
 
   @HostBinding('readOnly')
   get isReadonly() {
-    return this.service.combobox.variant === 'base' || this.service.combobox.hasLookupSingleSelection;
+    return this.service.variant === 'base' || this.service.hasLookupSingleSelection;
   }
 
   @HostBinding('attr.aria-autocomplete')
   get ariaAutocomplete() {
-    return this.service.combobox.isLookup ? 'list' : null;
+    return this.service.isLookup ? 'list' : null;
   }
 
   @HostBinding('class.slds-combobox__input-value')
   get hasReadonlyValue() {
-    return this.service.combobox.hasLookupSingleSelection;
+    return this.service.hasLookupSingleSelection;
   }
 
   @Input() set required(required: any) {
@@ -47,7 +47,7 @@ export class NglComboboxInput {
     this.renderer.addClass(nativeElement, 'slds-combobox__input');
     this.renderer.setAttribute(nativeElement, 'autoComplete', 'off');
     this.renderer.setAttribute(nativeElement, 'role', 'textbox');
-    this.renderer.setAttribute(nativeElement, 'aria-controls', this.service.combobox.uid);
+    this.renderer.setAttribute(nativeElement, 'aria-controls', this.service.uid);
     if (!nativeElement.id) {
       this.renderer.setAttribute(nativeElement, 'id', uniqueId('combobox-input'));
     }
@@ -77,15 +77,15 @@ export class NglComboboxInput {
 
   @HostListener('click')
   onMouseInteraction() {
-    if (this.service.combobox.hasLookupSingleSelection || (this.service.combobox.open && this.service.combobox.isLookup)) {
+    if (this.service.hasLookupSingleSelection || (this.service.open && this.service.isLookup)) {
       return;
     }
-    this.service.combobox.openChange.emit(!this.service.combobox.open);
+    this.service.openChange.emit(!this.service.open);
   }
 
   @HostListener('blur')
   onBlur() {
-    this.service.combobox.openChange.emit(false);
+    this.service.openChange.emit(false);
   }
 
   @HostListener('keydown', ['$event'])
@@ -97,37 +97,37 @@ export class NglComboboxInput {
       return;
     }
 
-    if (this.service.combobox.open) {
+    if (this.service.open) {
       switch (keyCode) {
         // User selects currently active option by pressing the `Enter` key
         case ENTER:
           trapEvent(evt);
-          this.service.combobox.onOptionSelection();
+          this.service.onOptionSelection();
           return;
 
         // Propagate to keymanager
         default:
-          this.service.combobox.keyManager.onKeydown(evt);
+          this.service.keyManager.onKeydown(evt);
           return;
       }
     } else {
 
       // Do nothing if readonly Lookup
-      if (this.service.combobox.hasLookupSingleSelection) {
+      if (this.service.hasLookupSingleSelection) {
         return;
       }
 
       // Pressing the `Down` or `Enter` key will expand the collapsed menu
       if (keyCode === DOWN_ARROW || keyCode === ENTER) {
         trapEvent(evt);
-        this.service.combobox.openChange.emit(true);
+        this.service.openChange.emit(true);
         return;
       }
 
       // Any key on Lookup should expand the collapsed menu
-      if (this.service.combobox.isLookup) {
+      if (this.service.isLookup) {
         // Delay emission so actual value of the input has been updated
-        setTimeout(() => this.service.combobox.openChange.emit(true), 0);
+        setTimeout(() => this.service.openChange.emit(true), 0);
       }
     }
   }
