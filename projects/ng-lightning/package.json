@@ -1,6 +1,6 @@
 {
   "name": "ng-lightning",
-  "version": "8.0.0",
+  "version": "15.0.0",
   "description": "Native Angular components and directives for Lightning Design System",
   "repository": {
     "type": "git",
@@ -29,6 +29,6 @@
     "@angular/forms": "^15.0.0"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://acuity.jfrog.io/acuity/api/npm/npm/"
   }
 }

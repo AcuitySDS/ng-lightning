@@ -23,10 +23,8 @@ export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number,
   return dispatchEvent(node, createKeyboardEvent(type, keyCode, target)) as KeyboardEvent;
 }
 
-function createHTMLEvent(type: string) {
-  const evt = document.createEvent('HTMLEvents');
-  evt.initEvent(type, true, true);
-  return evt;
+function createHTMLEvent(type: string,  bubbles = true, cancelable = true, composed = true) {
+  return new Event(type, {bubbles, cancelable, composed});
 }
 
 /** Dispatches a keydown event from an element. */

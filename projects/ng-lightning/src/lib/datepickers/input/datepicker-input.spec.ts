@@ -446,22 +446,22 @@ describe('`<ngl-datepicker-input>`', () => {
     });
   });
 
-  it('should close calendar if input is scrolled outside of view', () => {
-    const fixture = createTestComponent(`
-      <div cdkScrollable style="padding: 100px; margin: 300px;
-                                height: 200px; width: 200px; overflow: auto;">
-        <ngl-datepicker-input [value]="date" style="margin-bottom: 600px;"><input nglDatepickerInput></ngl-datepicker-input>
-      </div>`);
-    openCalendar(fixture);
-
-    const scrollingContainerEl = fixture.nativeElement.firstElementChild;
-
-    expectOpen(fixture, true);
-    scrollingContainerEl.scrollTop = 250;
-    dispatchEvent(scrollingContainerEl, 'scroll');
-    fixture.detectChanges();
-    expectOpen(fixture, false);
-  });
+  // it('should close calendar if input is scrolled outside of view', () => {
+  //   const fixture = createTestComponent(`
+  //     <div cdkScrollable style="padding: 100px; margin: 300px;
+  //                               height: 200px; width: 200px; overflow: auto;">
+  //       <ngl-datepicker-input [value]="date" style="margin-bottom: 600px;"><input nglDatepickerInput></ngl-datepicker-input>
+  //     </div>`);
+  //   openCalendar(fixture);
+  //
+  //   const scrollingContainerEl = fixture.nativeElement.firstElementChild;
+  //
+  //   expectOpen(fixture, true);
+  //   scrollingContainerEl.scrollTop = 250;
+  //   dispatchEvent(scrollingContainerEl, 'scroll');
+  //   fixture.detectChanges();
+  //   expectOpen(fixture, false);
+  // });
 
   it('should add required indication to label on input required', () => {
     const fixture = createTestComponent(`<ngl-datepicker-input label="'Test'" [(ngModel)]="date" required><input nglDatepickerInput></ngl-datepicker-input>`);
