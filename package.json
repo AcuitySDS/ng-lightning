@@ -27,15 +27,15 @@
     "demo:release": "npm run demo:build && node scripts/gh-pages"
   },
   "dependencies": {
-    "@angular/animations": "^14.2.12",
-    "@angular/cdk": "^14.2.7",
-    "@angular/common": "^14.2.12",
-    "@angular/compiler": "^14.2.12",
-    "@angular/core": "^14.2.12",
-    "@angular/forms": "^14.2.12",
-    "@angular/platform-browser": "^14.2.12",
-    "@angular/platform-browser-dynamic": "^14.2.12",
-    "@angular/router": "^14.2.12",
+    "@angular/animations": "^15.2.2",
+    "@angular/cdk": "^15.2.2",
+    "@angular/common": "^15.2.2",
+    "@angular/compiler": "^15.2.2",
+    "@angular/core": "^15.2.2",
+    "@angular/forms": "^15.2.2",
+    "@angular/platform-browser": "^15.2.2",
+    "@angular/platform-browser-dynamic": "^15.2.2",
+    "@angular/router": "^15.2.2",
     "cleave.js": "^1.6.0",
     "core-js": "^2.6.3",
     "date-fns": "^2.6.0",
@@ -46,10 +46,10 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.2.10",
-    "@angular/cli": "^14.2.10",
-    "@angular/compiler-cli": "^14.2.12",
-    "@angular/language-service": "^14.2.12",
+    "@angular-devkit/build-angular": "^15.2.2",
+    "@angular/cli": "^15.2.2",
+    "@angular/compiler-cli": "^15.2.2",
+    "@angular/language-service": "^15.2.2",
     "@salesforce-ux/design-system": "~2.9.0",
     "@stackblitz/sdk": "^1.3.0",
     "@types/jasmine": "~3.6.0",
@@ -76,7 +76,7 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "karma-sauce-launcher": "^2.0.2",
     "markdown-it": "^8.4.2",
-    "ng-packagr": "^14.2.2",
+    "ng-packagr": "^15.2.2",
     "npm-run-all": "^4.1.5",
     "prismjs": "^1.29.0",
     "protractor": "~7.0.0",
@@ -88,7 +88,7 @@
     "simple-git": "^1.107.0",
     "ts-node": "~7.0.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.6.4"
+    "typescript": "~4.9.5"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
