@@ -2,7 +2,13 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChan
          ViewChildren, QueryList, SimpleChanges, ContentChild, ViewChild, NgZone, ElementRef, ChangeDetectorRef,
          Optional, Inject, HostBinding, AfterContentInit } from '@angular/core';
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
-import { ConnectionPositionPair, CdkOverlayOrigin, CdkConnectedOverlay } from '@angular/cdk/overlay';
+import {
+  ConnectionPositionPair,
+  CdkOverlayOrigin,
+  CdkConnectedOverlay,
+  CloseScrollStrategy,
+  ScrollStrategyOptions, ScrollStrategy
+} from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { DEFAULT_DROPDOWN_POSITIONS } from '../util/overlay-position';
@@ -25,7 +31,9 @@ import { NglComboboxConfig, NGL_COMBOBOX_CONFIG } from './config';
   providers: [ NglComboboxService ],
 })
 export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
+
   private activeDescendantSubscription: any;
+  scrollStrategy: ScrollStrategy;
 
   @Input() set variant(value) {this.service.variant = value};
 
@@ -119,7 +127,9 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
   constructor(@Optional() @Inject(NGL_COMBOBOX_CONFIG) defaultConfig: NglComboboxConfig,
               private ngZone: NgZone,
               private cd: ChangeDetectorRef,
-              private service: NglComboboxService) {
+              private service: NglComboboxService,
+              private sso: ScrollStrategyOptions
+  ) {
     const config = { ...new NglComboboxConfig(), ...defaultConfig };
     this.loadingLabel = config.loadingLabel;
     this.noOptionsFound = config.noOptionsFound;
@@ -128,7 +138,7 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
     //service.combobox = this;
     this.openChange = this.service.openChange;
     this.selectionChange = this.service.selectionChange;
-    // this.service.openChange = this.openChange;
+    this.scrollStrategy = sso.close({threshold: 300});
   }
 
   ngAfterContentInit() {

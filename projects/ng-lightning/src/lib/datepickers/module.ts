@@ -16,7 +16,6 @@ import { NglDatepickerYear } from './year';
 import { NglDatepickerMonth } from './month';
 
 import { NglDateAdapter } from './adapters/date-fns-adapter';
-import { NglOverlayModule } from '../common/overlay/overlay.module';
 import { NglFormsModule } from '../forms/module';
 
 const EXPORTS = [
@@ -33,7 +32,6 @@ const EXPORTS = [
     NglInternalOutletModule,
     OverlayModule,
     NglClickOutsideModule,
-    NglOverlayModule,
     NglFormsModule
   ],
   providers: [NglDateAdapter],

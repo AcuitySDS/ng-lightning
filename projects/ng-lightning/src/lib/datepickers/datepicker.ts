@@ -1,5 +1,7 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, ElementRef,
-         OnInit, OnChanges, AfterViewInit, Optional, Inject, ViewChild, SimpleChanges, LOCALE_ID } from '@angular/core';
+import {
+  Component, Input, Output, EventEmitter, ChangeDetectionStrategy, ElementRef,
+  OnInit, OnChanges, AfterViewInit, Optional, Inject, ViewChild, SimpleChanges, LOCALE_ID, forwardRef
+} from '@angular/core';
 import { ENTER, UP_ARROW, LEFT_ARROW, DOWN_ARROW, RIGHT_ARROW, PAGE_UP, PAGE_DOWN, HOME, END } from '@angular/cdk/keycodes';
 import { uniqueId, trapEvent } from '../util/util';
 import { InputBoolean, InputNumber } from '../util/convert';

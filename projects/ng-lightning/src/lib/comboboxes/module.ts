@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { NglInternalOutletModule } from '../util/outlet.module';
 import { NglIconsModule } from '../icons/module';
 import { NglFormsModule } from '../forms/module';
-import { NglOverlayModule } from '../common/overlay/overlay.module';
 
 import { NglCombobox } from './combobox';
 import { NglComboboxOption } from './combobox-option';
@@ -19,6 +18,6 @@ const DIRECTIVES = [
 @NgModule({
   declarations: DIRECTIVES,
   exports: DIRECTIVES,
-  imports: [CommonModule, NglInternalOutletModule, NglIconsModule, NglFormsModule, OverlayModule, NglOverlayModule],
+  imports: [CommonModule, NglInternalOutletModule, NglIconsModule, NglFormsModule, OverlayModule],
 })
 export class NglComboboxesModule {}

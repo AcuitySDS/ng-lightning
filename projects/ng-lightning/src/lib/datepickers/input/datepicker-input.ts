@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, ElementRef, Renderer2, TemplateRef, forwardRef, ChangeDetectorRef,
          Output, EventEmitter, ViewChild, OnInit, Inject, OnChanges, SimpleChanges, OnDestroy, Optional, NgZone, LOCALE_ID } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
-import { CdkConnectedOverlay, ConnectionPositionPair } from '@angular/cdk/overlay';
+import {CdkConnectedOverlay, ConnectionPositionPair, ScrollStrategy, ScrollStrategyOptions} from '@angular/cdk/overlay';
 import { FocusTrapFactory, FocusTrap } from '@angular/cdk/a11y';
 import { DOWN_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { BehaviorSubject } from 'rxjs';
@@ -10,7 +10,7 @@ import { uniqueId } from '../../util/util';
 import { InputBoolean, toBoolean } from '../../util/convert';
 import { HostService } from '../../common/host/host.service';
 import { NglDateAdapter } from '../adapters/date-fns-adapter';
-import { NGL_DATEPICKER_CONFIG, NglDatepickerConfig } from '../config';
+import {NGL_DATEPICKER_CONFIG, NGL_DATEPICKER_INPUT, NglDatepickerConfig} from '../config';
 import { DEFAULT_DROPDOWN_POSITIONS } from '../../util/overlay-position';
 import { parseDate, isDisabled } from '../util';
 import { IDatepickerInput } from './datepicker-input.interface';
@@ -31,7 +31,12 @@ const NGL_DATEPICKER_INPUT_VALIDATOR = {
   selector: 'ngl-datepicker-input',
   templateUrl: './datepicker-input.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [NGL_DATEPICKER_INPUT_VALUE_ACCESSOR, NGL_DATEPICKER_INPUT_VALIDATOR, HostService],
+  providers: [NGL_DATEPICKER_INPUT_VALUE_ACCESSOR, NGL_DATEPICKER_INPUT_VALIDATOR, HostService,
+    {
+      provide: NGL_DATEPICKER_INPUT,
+      useExisting: forwardRef(() => NglDatepickerInput)
+    }],
+
 })
 export class NglDatepickerInput implements ControlValueAccessor, Validator, OnInit, OnChanges, OnDestroy {
 
@@ -59,6 +64,8 @@ export class NglDatepickerInput implements ControlValueAccessor, Validator, OnIn
    * Aligns the right or left side of the dropdown menu with the respective side of the input.
    */
   @Input() dropdownAlign: 'left' | 'right';
+
+  scrollStrategy: ScrollStrategy;
 
   /**
    * The date value.
@@ -166,7 +173,8 @@ export class NglDatepickerInput implements ControlValueAccessor, Validator, OnIn
               private hostService: HostService,
               private ngZone: NgZone,
               private focusTrapFactory: FocusTrapFactory,
-              private adapter: NglDateAdapter) {
+              private adapter: NglDateAdapter,
+              private sso: ScrollStrategyOptions) {
     this.renderer.addClass(this.element.nativeElement, 'slds-form-element');
     this.renderer.addClass(this.element.nativeElement, 'slds-dropdown-trigger');
     this.renderer.addClass(this.element.nativeElement, 'slds-dropdown-trigger_click');
@@ -187,6 +195,8 @@ export class NglDatepickerInput implements ControlValueAccessor, Validator, OnIn
     this.previousMonthLabel = this.config.previousMonthLabel;
     this.nextMonthLabel = this.config.nextMonthLabel;
     this.patternPlaceholder = this.config.patternPlaceholder;
+
+    this.scrollStrategy = sso.close({threshold: 300});
   }
 
   onChange: Function | null = null;
@@ -330,7 +340,7 @@ export class NglDatepickerInput implements ControlValueAccessor, Validator, OnIn
   }
 
   updateDatepickerSize(width: number, height: number) {
-    this.ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
+    this.ngZone.onStable.asObservable().pipe(take(5)).subscribe(() => {
       const { overlayRef } = this.cdkOverlay;
       overlayRef.updateSize({
         minWidth: width,
