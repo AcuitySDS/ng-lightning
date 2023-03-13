@@ -196,7 +196,7 @@ export class NglDatepickerInput implements ControlValueAccessor, Validator, OnIn
     this.nextMonthLabel = this.config.nextMonthLabel;
     this.patternPlaceholder = this.config.patternPlaceholder;
 
-    this.scrollStrategy = sso.close({threshold: 300});
+    this.scrollStrategy = sso.reposition({autoClose: true});
   }
 
   onChange: Function | null = null;

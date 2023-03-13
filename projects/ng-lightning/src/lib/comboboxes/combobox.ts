@@ -6,13 +6,11 @@ import {
   ConnectionPositionPair,
   CdkOverlayOrigin,
   CdkConnectedOverlay,
-  CloseScrollStrategy,
   ScrollStrategyOptions, ScrollStrategy
 } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { DEFAULT_DROPDOWN_POSITIONS } from '../util/overlay-position';
-import { uniqueId, isOptionSelected, addOptionToSelection } from '../util/util';
 import { InputBoolean, InputNumber, toBoolean } from '../util/convert';
 import { NglComboboxOption } from './combobox-option';
 import { NglComboboxInput } from './combobox-input';
@@ -33,7 +31,7 @@ import { NglComboboxConfig, NGL_COMBOBOX_CONFIG } from './config';
 export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
 
   private activeDescendantSubscription: any;
-  scrollStrategy: ScrollStrategy;
+  public scrollStrategy: ScrollStrategy;
 
   @Input() set variant(value) {this.service.variant = value};
 
@@ -135,10 +133,10 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
     this.noOptionsFound = config.noOptionsFound;
     this.removeSelectedLabel = config.removeSelectedLabel;
 
-    //service.combobox = this;
     this.service.openChange = this.openChange;
     this.service.selectionChange = this.selectionChange;
-    this.scrollStrategy = sso.close({threshold: 300});
+
+    this.scrollStrategy = sso.reposition({autoClose: true});
   }
 
   ngAfterContentInit() {
