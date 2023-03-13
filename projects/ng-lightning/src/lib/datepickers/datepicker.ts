@@ -21,6 +21,8 @@ const KEYBOARD_MOVES = {
   [END]:         ['MoveTo', 31],
 };
 
+type _NglDatepickerInput = NglDatepickerInput;  //workaround for angular issue with type only imports in constructors
+
 @Component({
   selector: 'ngl-datepicker',
   templateUrl: './datepicker.html',
@@ -93,7 +95,7 @@ export class NglDatepicker implements OnInit, OnChanges, AfterViewInit {
 
   @ViewChild(NglDatepickerMonth) monthView: NglDatepickerMonth;
 
-  constructor(@Optional() @Inject(NGL_DATEPICKER_INPUT) private dtInput: NglDatepickerInput,
+  constructor(@Optional() @Inject(NGL_DATEPICKER_INPUT) private dtInput: _NglDatepickerInput,
               @Optional() @Inject(NGL_DATEPICKER_CONFIG) defaultConfig: NglDatepickerConfig,
               @Inject(LOCALE_ID) locale: string,
               private element: ElementRef) {
