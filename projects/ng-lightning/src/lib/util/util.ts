@@ -61,7 +61,7 @@ export function ngClassCombine(ngClasses: string | string[] | Set<string> | { [k
 
   // Convert array to object
   if (Array.isArray(ngClasses)) {
-    ngClasses = ngClasses.reduce((o: Object, klass: string) => {
+    ngClasses = (<string[]>ngClasses).reduce((o: Object, klass: string) => {
       o[klass] = true;
       return o;
     }, {});
