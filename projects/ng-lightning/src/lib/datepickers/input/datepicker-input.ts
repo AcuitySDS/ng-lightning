@@ -235,7 +235,10 @@ export class NglDatepickerInput implements ControlValueAccessor, Validator, OnIn
 
   registerOnValidatorChange(fn: () => void): void { this.validatorChange = fn; }
 
-  setDisabledState(disabled: boolean) { this.disabled = disabled; }
+  setDisabledState(disabled: boolean) {
+    this.disabled = disabled;
+    this.cd.detectChanges();
+  }
 
   onBlur() {
     if (this.value instanceof Date) {

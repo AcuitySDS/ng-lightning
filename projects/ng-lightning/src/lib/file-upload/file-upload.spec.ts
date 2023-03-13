@@ -246,14 +246,17 @@ describe('`<ngl-file-upload>`', () => {
 
   it('should handle disabled state', () => {
     const fixture = createTestComponent(`<ngl-file-upload [ngModel]="file" disabled></ngl-file-upload>`);
-    const inputEl = getInputElement(fixture.nativeElement);
+    return fixture.whenStable().then(() => {
+      const inputEl = getInputElement(fixture.nativeElement);
 
-    expect(inputEl.getAttribute('disabled')).not.toBeNull();
+      expect(inputEl.getAttribute('disabled')).not.toBeNull();
 
-    const dropzoneEl = getDropZoneElement(fixture.nativeElement);
-    dispatchEvent(dropzoneEl, 'dragover');
-    fixture.detectChanges();
-    expect(dropzoneEl).not.toHaveCssClass('slds-has-drag-over');
+      const dropzoneEl = getDropZoneElement(fixture.nativeElement);
+      dispatchEvent(dropzoneEl, 'dragover');
+      fixture.detectChanges();
+      expect(dropzoneEl).not.toHaveCssClass('slds-has-drag-over');
+    });
+
   });
 });
 

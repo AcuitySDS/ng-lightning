@@ -163,7 +163,10 @@ describe('Slider Component', () => {
   it('should handle `ngModel` disabled', () => {
     const fixture = createTestComponent(`<ngl-slider [ngModel]="value" disabled></ngl-slider>`);
     const input = getSliderInput(fixture.nativeElement);
-    expect(input.disabled).toEqual(true);
+    fixture.detectChanges();
+    return fixture.whenStable().then(() => {
+      expect(input.disabled).toEqual(true);
+    })
   });
 
   it('should display error message', () => {

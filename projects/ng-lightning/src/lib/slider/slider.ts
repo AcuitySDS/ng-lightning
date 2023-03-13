@@ -100,7 +100,10 @@ export class NglSlider implements ControlValueAccessor {
 
   registerOnTouched(fn: () => any): void { this.onTouched = fn; }
 
-  setDisabledState(isDisabled: boolean) { this.disabled = isDisabled; }
+  setDisabledState(isDisabled: boolean) {
+    this.disabled = isDisabled;
+    this.cd.detectChanges();
+  }
 
   onInput(value) {
     // Make sure we always emit number

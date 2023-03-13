@@ -1,4 +1,15 @@
-import { Component, Input, ChangeDetectionStrategy, ElementRef, Renderer2, TemplateRef, HostBinding, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  ElementRef,
+  Renderer2,
+  TemplateRef,
+  HostBinding,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectorRef
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import { trapEvent, uniqueId } from '../util/util';
 import { InputBoolean, InputNumber } from '../util/convert';
@@ -70,7 +81,7 @@ export class NglFileUpload implements ControlValueAccessor, Validator, OnChanges
 
   files: File[] = [];
 
-  constructor(private element: ElementRef, private renderer: Renderer2) {
+  constructor(private element: ElementRef, private renderer: Renderer2, private cd: ChangeDetectorRef) {
     this.renderer.addClass(this.element.nativeElement, 'slds-form-element');
   }
 
@@ -90,7 +101,10 @@ export class NglFileUpload implements ControlValueAccessor, Validator, OnChanges
 
   registerOnValidatorChange(fn: () => void): void { this.validatorChange = fn; }
 
-  setDisabledState(isDisabled: boolean) { this.disabled = isDisabled; }
+  setDisabledState(isDisabled: boolean) {
+    this.disabled = isDisabled;
+    this.cd.detectChanges();
+  }
 
   validate(c: AbstractControl): ValidationErrors | null {
     const files = c.value as File[];
