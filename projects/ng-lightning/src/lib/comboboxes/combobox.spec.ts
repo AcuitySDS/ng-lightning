@@ -378,25 +378,33 @@ describe('`NglCombobox`', () => {
   }));
 
   it('should activate loop matching options if repeating search', fakeAsync(() => {
-    const fixture = createTestComponent(null, false);
+    const fixture = createTestComponent(null, true);
     const { componentInstance, nativeElement } = fixture;
     const inputEl = getInput(nativeElement);
-    componentInstance.open = true;
     componentInstance.options = [{ value: 'abc' }, { value: 'ade' }, { value: 'afg' }];
+    componentInstance.open = true;
+
+    tick(300);
     fixture.detectChanges();
 
     expectActiveOption(inputEl, 0);
 
     dispatchKeyboardEvent(inputEl, 'keypress', 'a'.charCodeAt(0));
     tick(300);
+    fixture.detectChanges();
+
     expectActiveOption(inputEl, 1);
 
     dispatchKeyboardEvent(inputEl, 'keypress', 'a'.charCodeAt(0));
     tick(300);
+    fixture.detectChanges();
+
     expectActiveOption(inputEl, 2);
 
     dispatchKeyboardEvent(inputEl, 'keypress', 'a'.charCodeAt(0));
     tick(300);
+    fixture.detectChanges();
+
     expectActiveOption(inputEl, 0);
   }));
 
