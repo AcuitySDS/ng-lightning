@@ -201,6 +201,9 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
     this.updateMenuHeight();
   }
 
+  get activeOption() {
+    return this.service.activeOption;
+  }
   onDetach() {
     if (this.service.open) {
       this.close();

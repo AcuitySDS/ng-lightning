@@ -4,7 +4,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { ESCAPE, ENTER, DOWN_ARROW } from '@angular/cdk/keycodes';
 import { createGenericTestComponent, selectElements, dispatchKeyboardEvent, dispatchEvent } from '../../../test/util';
 import { NglComboboxesModule } from './module';
-import { NglComboboxOptionItem } from './combobox';
+import { NglComboboxOptionItem } from './combobox.service';
 import { NglCombobox } from '.';
 
 const createTestComponent = (html?: string, detectChanges?: boolean) =>
