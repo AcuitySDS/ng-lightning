@@ -13,9 +13,9 @@ export interface NglComboboxOptionItem {
 @Injectable()
 export class NglComboboxService {
 
-  openChange = new EventEmitter<boolean>();
+  openChange;
 
-  selectionChange = new EventEmitter();
+  selectionChange;
 
   variant: 'base' | 'lookup' = 'base';
 

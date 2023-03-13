@@ -42,11 +42,11 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
 
   @Input() @InputBoolean() set open(value) {this.service.open = value;}
 
-  @Output() openChange;
+  @Output() openChange = new EventEmitter<boolean>();
 
   @Input() set selection(value) {this.service.selection = value};
 
-  @Output() selectionChange;
+  @Output() selectionChange = new EventEmitter();
 
   @Input() @InputBoolean() set multiple(value) { this.service.multiple = value; }
 
@@ -108,7 +108,7 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
 
   @Input() selectionValueFn = (selection: string[]): string => {
     if (selection.length > 0) {
-      if (this.multiple && this.service.isLookup) {
+      if (this.service.multiple && this.service.isLookup) {
         return '';
       }
       return selection.length === 1 ? selection[0] : `${selection.length} options selected`;
@@ -136,8 +136,8 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
     this.removeSelectedLabel = config.removeSelectedLabel;
 
     //service.combobox = this;
-    this.openChange = this.service.openChange;
-    this.selectionChange = this.service.selectionChange;
+    this.service.openChange = this.openChange;
+    this.service.selectionChange = this.selectionChange;
     this.scrollStrategy = sso.close({threshold: 300});
   }
 
@@ -156,7 +156,7 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.selection || (this.selection && changes.data)) {
+    if (changes.selection || (this.service.selection && changes.data)) {
       this.calculateDisplayValue();
     }
     setTimeout(() => this.calculateErrors(), 0);
@@ -178,7 +178,7 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
     }
 
     // Listen to button presses if picklist to activate matching option
-    this.keyboardSubscribe(this.variant === 'base');
+    this.keyboardSubscribe(this.service.variant === 'base');
 
     // When it is open we listen for option changes in order to fix active option and handle scroll
     this.optionChangesSubscription = this.options?.changes.subscribe(() => {
@@ -327,7 +327,7 @@ export class NglCombobox implements OnChanges, OnDestroy, AfterContentInit {
 
   private calculateErrors() {
     if (this.required) {
-      this.hasErrors = !toBoolean(this.selection);
+      this.hasErrors = !toBoolean(this.service.selection);
     }
     this.cd.detectChanges();
   }
