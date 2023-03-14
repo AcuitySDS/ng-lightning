@@ -15,7 +15,7 @@
     "predemo:build": "rimraf dist/ng-lightning-app && npm run pug",
     "demo:build": "ng build --configuration production --base-href=/ng-lightning/",
     "pretest": "npm run pug",
-    "test": "ng test ng-lightning",
+    "test": "ng test ng-lightning --no-watch --no-progress",
     "test:github": "ng test ng-lightning --configuration github",
     "lib:tdd": "ng test ng-lightning --source-map=false --watch=true",
     "pretdd": "npm run pug",
