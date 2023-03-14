@@ -149,7 +149,7 @@ describe('Slider Component', () => {
 
     componentInstance.value = 50;
     fixture.detectChanges();
-    fixture.whenStable().then(() => {
+    return fixture.whenStable().then(() => {
       fixture.detectChanges();
       expect(input.value).toEqual('50');
       expect(getSliderValue(nativeElement)).toEqual('50');

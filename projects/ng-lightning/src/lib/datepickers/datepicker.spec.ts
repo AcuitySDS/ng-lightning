@@ -496,7 +496,7 @@ describe('`Datepicker` Component', () => {
     });
 
     it('should be defined via input callback', () => {
-      expectCalendar(fixture, [
+      return expectCalendar(fixture, [
         ['29-', '30-', '31-', '1', '2', '3', '4-'],
         ['5-', '6', '7', '8', '9', '10', '11-'],
         ['12-', '13', '14', '15', '16', '17', '18-'],
@@ -544,7 +544,7 @@ describe('`Datepicker` Component', () => {
   describe('`min`', () => {
     it('should disable appropriate dates', () => {
       const fixture = createTestComponent(`<ngl-datepicker [date]="date" [min]="min"></ngl-datepicker>`);
-      expectCalendar(fixture, [
+      return expectCalendar(fixture, [
         ['29-', '30-', '31-', '1-', '2-', '3-', '4-'],
         ['5-', '6-', '7-', '8-', '9-', '10-', '11-'],
         ['12', '13', '14', '15', '16', '17', '18'],
@@ -556,7 +556,7 @@ describe('`Datepicker` Component', () => {
     it('should not allow move to earlier view ', () => {
       const fixture = createTestComponent(`<ngl-datepicker [date]="date" [min]="min"></ngl-datepicker>`);
       fixture.componentInstance.date = new Date(2009, 0, 1);
-      expectCalendar(fixture, [
+      return expectCalendar(fixture, [
         ['29-', '30-', '31-', '1-', '2-', '3-', '4-'],
         ['5-', '6-', '7-', '8-', '9-', '10-', '11-'],
         ['12+', '13', '14', '15', '16', '17', '18'],
@@ -588,7 +588,7 @@ describe('`Datepicker` Component', () => {
     it('should disable appropriate dates', () => {
       const fixture = createTestComponent(`<ngl-datepicker [date]="date" [max]="max"></ngl-datepicker>`);
       fixture.componentInstance.date = new Date(2010, 9, 15); // 15 October 2010
-      expectCalendar(fixture, [
+      return expectCalendar(fixture, [
         ['26-', '27-', '28-', '29-', '30-', '1', '2'],
         ['3', '4', '5', '6', '7', '8', '9'],
         ['10', '11', '12', '13', '14', '*15+', '16'],
@@ -601,7 +601,7 @@ describe('`Datepicker` Component', () => {
     it('should not allow move to later view ', () => {
       const fixture = createTestComponent(`<ngl-datepicker [date]="date" [max]="max"></ngl-datepicker>`);
       fixture.componentInstance.date = new Date(2019, 0, 1);
-      expectCalendar(fixture, [
+      return expectCalendar(fixture, [
         ['26-', '27-', '28-', '29-', '30-', '1', '2'],
         ['3', '4', '5', '6', '7', '8', '9'],
         ['10', '11', '12', '13', '14', '15', '16'],

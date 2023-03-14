@@ -185,7 +185,7 @@ describe('`NglColorpicker`', () => {
 
     it('should render correctly', () => {
       const fixture = createTestComponent();
-      openPopover(fixture).then((popover) => {
+      return openPopover(fixture).then((popover) => {
         expect(popover).toHaveCssClass('slds-popover');
         expect(popover).toHaveCssClass('slds-color-picker__selector');
       });
@@ -193,7 +193,7 @@ describe('`NglColorpicker`', () => {
 
     it('should send pressed color from swatches on done', async(() => {
       const fixture = createTestComponent();
-      openPopover(fixture).then((popover) => {
+      return openPopover(fixture).then((popover) => {
         const swatches = getSwatches(popover);
         expect(swatches.length).toBe(28);
 
