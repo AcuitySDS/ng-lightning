@@ -29,6 +29,6 @@
     "@angular/forms": "^15.0.0"
   },
   "publishConfig": {
-    "registry": "https://acuity.jfrog.io/acuity/api/npm/npm/"
+    "registry": "https://acuity.jfrog.io/artifactory/api/npm/npm/"
   }
 }
