@@ -8,7 +8,9 @@ import {
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
 
-import '../test/jasmine.config';
+import {jasmineConfig} from "../test/jasmine.config";
+
+jasmineConfig();
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
