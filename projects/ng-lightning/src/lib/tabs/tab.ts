@@ -8,7 +8,7 @@ import { uniqueId } from '../util/util';
  */
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[ngl-tab]',
+  selector: '[ngl-tab], ngl-tab',
   exportAs: 'nglTab',
 })
 export class NglTab {
