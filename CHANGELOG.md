@@ -1,3 +1,7 @@
+## [15.1.2](https://github.com/ng-lightning/ng-lightning/compare/v15.1.1...v15.1.2) (2023-03-16)
+
+
+
 ## [15.1.1](https://github.com/ng-lightning/ng-lightning/compare/v15.1.0...v15.1.1) (2023-03-14)
 
 
