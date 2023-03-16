@@ -10,7 +10,7 @@ export class NglPick implements AfterContentInit {
   selected: any;
   values = new BehaviorSubject(null);
 
-  @Input('nglPick') set setSelected(selected: string) {
+  @Input('nglPick') set setSelected(selected: any) {
     this.selected = selected;
     this.ngAfterContentInit();
   }
